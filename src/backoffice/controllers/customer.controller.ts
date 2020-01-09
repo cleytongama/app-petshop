@@ -6,10 +6,11 @@ import {
   Delete,
   Param,
   Body,
+  UsePipes,
 } from '@nestjs/common';
-import { Customer } from '../models/model.customer';
+import { Customer } from '../models/customer.model';
 import { Result } from '../models/result.models';
-
+import { ValidationPipe } from './../validation/validation';
 @Controller('v1/customers')
 export class CustomerController {
   @Get()
@@ -23,8 +24,8 @@ export class CustomerController {
   }
 
   @Post()
-  post(@Body() body: Customer) {
-    return new Result('Cliente criado com sucesso', true, body, null);
+  post(@Body(new ValidationPipe()) customer: Customer) {
+    return new Result('Cliente criado com sucesso', true, customer, null);
   }
 
   @Put(':document')
