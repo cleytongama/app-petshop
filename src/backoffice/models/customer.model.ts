@@ -1,7 +1,15 @@
 import { Pet } from './pet.model';
 import { Address } from './address.model';
 import { CreditCard } from './credit-card.model';
-import { IsString, MinLength, MaxLength, IsNotEmpty } from 'class-validator';
+import {
+  IsString,
+  MinLength,
+  MaxLength,
+  IsNotEmpty,
+  ValidateNested,
+} from 'class-validator';
+import { Type } from 'class-transformer';
+import { User } from './user.model';
 export class Customer {
   @MinLength(2, {
     message: 'Nome precisa de um tamanho máximo de 2 caracters',
@@ -18,32 +26,27 @@ export class Customer {
   })
   public document: string;
   public email: string;
-  public password: string;
-  public active: boolean;
   public pets: Pet[];
+
+  @ValidateNested({ each: true })
+  @Type(() => Address)
   public billingAddress: Address;
+
+  @ValidateNested()
   public shippingAddress: Address;
+
   public creditCard: CreditCard;
+
+  public user: User;
 
   constructor(
     name: string,
     document: string,
     email: string,
-    password: string,
-    active: boolean,
     pets: Pet[],
     billingAddress: Address,
     shippingAddress: Address,
     creditCard: CreditCard,
-  ) {
-    this.name = name;
-    this.document = document;
-    this.email = email;
-    this.password = password;
-    this.active = active;
-    this.pets = pets;
-    this.billingAddress = billingAddress;
-    this.shippingAddress = shippingAddress;
-    this.creditCard = creditCard;
-  }
+    user: User,
+  ) {}
 }
